@@ -1,10 +1,37 @@
 package app
 
+import app.AccountTypes.{AccountNumber, Balance}
+
 import scala.io.StdIn
 
 object Prompt {
 
   def ask(message: String) = StdIn.readLine(message)
+
+}
+
+object AccountTypes {
+  type AccountNumber = String
+  type Balance = Double
+}
+
+abstract class BankAccount(accountNumber : AccountTypes.AccountNumber,
+                           balance: AccountTypes.Balance) {
+
+  def withdraw(amount : Double) : AccountTypes.Balance
+  def deposit(amount : Double) : AccountTypes.Balance
+}
+
+final class SavingsAccount(accountNumber: AccountNumber,
+                           balance: Balance) extends BankAccount(accountNumber, balance) {
+
+  override def withdraw(amount: Balance): Balance = {
+    0.00
+  }
+
+  override def deposit(amount: Balance): Balance = {
+    0.00
+  }
 
 }
 
