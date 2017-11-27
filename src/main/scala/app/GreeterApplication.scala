@@ -16,26 +16,50 @@ object AccountTypes {
 }
 
 abstract class BankAccount(accountNumber : AccountTypes.AccountNumber,
-                           balance: AccountTypes.Balance) {
+                           val balance: AccountTypes.Balance) {
 
-  def withdraw(amount : Double) : AccountTypes.Balance
-  def deposit(amount : Double) : AccountTypes.Balance
+  def withdraw(amount : Double) : BankAccount
+  def deposit(amount : Double) : BankAccount
+
+  override def toString: AccountNumber = s"Account number: $accountNumber, balance : $balance"
 }
 
 final class SavingsAccount(accountNumber: AccountNumber,
                            balance: Balance) extends BankAccount(accountNumber, balance) {
 
-  override def withdraw(amount: Balance): Balance = {
-    0.00
+  override def withdraw(amount: Balance): BankAccount = {
+    if ((balance - amount) < 0) {
+      println(s"You have insufficient funds")
+      this
+    } else {
+      val deducted = balance - amount
+      new SavingsAccount(accountNumber, deducted)
+    }
   }
 
-  override def deposit(amount: Balance): Balance = {
-    0.00
+  override def deposit(amount: Balance): BankAccount = {
+    new SavingsAccount(accountNumber, balance + amount)
   }
 
 }
 
-class Person(name : String, age : Int) {
+final class CashISASavingsAccount(accountNumber: AccountNumber,
+                                  balance: Balance) extends BankAccount(accountNumber, balance) {
+
+  override def withdraw(amount: Balance): BankAccount = {
+    println(s"You can't withdraw yet, your money is locked in for 3 years!!! And... we've reduced your APR to 0.2%!")
+    this
+  }
+
+  override def deposit(amount: Balance): BankAccount = {
+    new CashISASavingsAccount(accountNumber, balance + amount)
+  }
+
+}
+
+class Person(name : String, age : Int,   val bankAccount: BankAccount) {
+
+  def this(name: String, age : Int) = this(name, age, new SavingsAccount("12345", 0.00))
 
   private def years : String = if(age > 1) "years" else "year"
 
@@ -43,7 +67,7 @@ class Person(name : String, age : Int) {
     if (name.toLowerCase.contains("adam")) {
       s"You don't get a hello!"
     } else {
-      s"Hello $name, you are $age $years old"
+      s"Hello $name, you are $age $years old. \nYour account details are: $bankAccount"
     }
   }
 
@@ -53,7 +77,12 @@ object GreeterApplication extends App {
   val name = Prompt.ask("What is your name? ")
   val age = Prompt.ask("How old are you? ")
 
-  val person = new Person(name, age.toInt)
+  val cashisa = new CashISASavingsAccount("45676", 0.0)
+  val deposited = cashisa.deposit(1000.00)
+  val withdrawn = deposited.withdraw(200.00)
+
+  val person = new Person(name, age.toInt, withdrawn)
+
   println(person.speak())
 }
 
