@@ -44,7 +44,8 @@ final class SavingsAccount(accountNumber: AccountNumber,
 }
 
 final class CashISASavingsAccount(accountNumber: AccountNumber,
-                                  balance: Balance) extends BankAccount(accountNumber, balance) {
+                                  balance: Balance,
+                                  private val depositThreshold : Double = 200.00) extends BankAccount(accountNumber, balance) {
 
   override def withdraw(amount: Balance): BankAccount = {
     println(s"You can't withdraw yet, your money is locked in for 3 years!!! And... we've reduced your APR to 0.2%!")
@@ -52,7 +53,13 @@ final class CashISASavingsAccount(accountNumber: AccountNumber,
   }
 
   override def deposit(amount: Balance): BankAccount = {
-    new CashISASavingsAccount(accountNumber, balance + amount)
+    if (amount > depositThreshold) {
+      val difference = amount - depositThreshold
+      println(s"You can't deposit more than £$depositThreshold. Excess: £$difference.")
+      new CashISASavingsAccount(accountNumber, balance + depositThreshold)
+    } else {
+      new CashISASavingsAccount(accountNumber, balance + amount)
+    }
   }
 
 }
@@ -77,12 +84,18 @@ object GreeterApplication extends App {
   val name = Prompt.ask("What is your name? ")
   val age = Prompt.ask("How old are you? ")
 
-  val cashisa = new CashISASavingsAccount("45676", 0.0)
+  val cashisa = new CashISASavingsAccount("45676", 0.0, 1000.00)
   val deposited = cashisa.deposit(1000.00)
   val withdrawn = deposited.withdraw(200.00)
 
+  val normalAccount = new CashISASavingsAccount("12334", 100.00)
+  val loyalAccountDeposited = normalAccount.deposit(300.00)
+
   val person = new Person(name, age.toInt, withdrawn)
 
+  val loyal = new Person("Loyal customer", 22, loyalAccountDeposited)
+
   println(person.speak())
+  println(loyal.speak())
 }
 
