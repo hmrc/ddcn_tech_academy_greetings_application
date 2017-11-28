@@ -627,6 +627,3 @@ Now, I would also like you to implement a `final class CashISAAccount`  which **
 * [Scala type examples (type aliases and type members) | alvinalexander.com](https://alvinalexander.com/scala/scala-type-examples-type-aliases-members)
 * [Java Abstraction - Abstract class](https://www.tutorialspoint.com/java/java_abstraction.htm)
 * [Test Driven Development (TDD): Example Walkthrough | Technology Conversations](https://technologyconversations.com/2013/12/20/test-driven-development-tdd-example-walkthrough/)
-
-#academy/basic/part_1
-
