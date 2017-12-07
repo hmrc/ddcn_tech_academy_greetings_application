@@ -1,6 +1,6 @@
 package app.repositories
 
-import app.models.Pet
+import app.models.{Cat, Dog, Pet}
 
 object PetRepository {
 
@@ -8,11 +8,16 @@ object PetRepository {
 
   def all() : List[Pet] = _pets
 
-  def findByName(name : String) : Option[Pet] = None
+  def findByName(name : String) : Option[Pet] = _pets.find(p => p.name == name)
 
   def dogs : List[Pet] = _pets
 
-  def cats : List[Pet] = _pets
+  def cats : List[Cat] = {
+    _pets.flatMap {
+      case c @ Cat(_, _) => Some(c)
+      case _ => None
+    }
+  }
 
   def other : List[Pet] = _pets
 
@@ -24,14 +29,6 @@ object PetRepository {
   def removeByName(name : String) : List[Pet] = _pets.filterNot(p => p.name.equalsIgnoreCase(name))
 
   def update(pet : Pet) : List[Pet] = _pets.updated(_pets.indexOf(pet), pet)
-
-//  def update(pet : Pet) : List[Pet] = {
-//    val orig = _pets
-//
-//    val mod = orig.map(x => if (x.hashCode.equals(pet.hashCode)) pet else x )
-//    _pets = mod
-//    all()
-//  }
 
 
 }
