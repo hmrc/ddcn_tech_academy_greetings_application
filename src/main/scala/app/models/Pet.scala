@@ -1,6 +1,13 @@
 package app.models
 
+import java.util.UUID
+
 sealed trait Pet {
+
+  protected val _uuid = UUID.randomUUID()
+
+  def id = _uuid
+
   val name : String
   def speak() : String = "hello"
 }

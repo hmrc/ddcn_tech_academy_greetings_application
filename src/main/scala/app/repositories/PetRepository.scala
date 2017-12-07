@@ -15,11 +15,23 @@ object PetRepository {
   def cats : List[Pet] = _pets
 
   def other : List[Pet] = _pets
-  
-  def add(pet: Pet*) : List[Pet] = _pets
 
-  def removeByName(name : String) : List[Pet] = _pets
+  def add(pet: Pet*) : List[Pet] = {
+    _pets = _pets ::: pet.toList
+    all()
+  }
 
-  def update(pet : Pet) : List[Pet] = _pets
+  def removeByName(name : String) : List[Pet] = _pets.filterNot(p => p.name.equalsIgnoreCase(name))
+
+  def update(pet : Pet) : List[Pet] = _pets.updated(_pets.indexOf(pet), pet)
+
+//  def update(pet : Pet) : List[Pet] = {
+//    val orig = _pets
+//
+//    val mod = orig.map(x => if (x.hashCode.equals(pet.hashCode)) pet else x )
+//    _pets = mod
+//    all()
+//  }
+
 
 }
