@@ -10,7 +10,9 @@ object PetRepository {
 
   def findByName(name : String) : Option[Pet] = _pets.find(p => p.name == name)
 
-  def dogs : List[Pet] = _pets
+  def dogs : List[Dog] = {
+    _pets.collect { case d : Dog => d }
+  }
 
   def cats : List[Cat] = {
     _pets.flatMap {
@@ -19,7 +21,7 @@ object PetRepository {
     }
   }
 
-  def other : List[Pet] = _pets
+  def other : List[Pet] = _pets.filterNot(x => x.isInstanceOf[Cat] || x.isInstanceOf[Dog])
 
   def add(pet: Pet*) : List[Pet] = {
     _pets = _pets ::: pet.toList
