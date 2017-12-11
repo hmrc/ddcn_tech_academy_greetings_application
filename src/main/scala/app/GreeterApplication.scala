@@ -1,6 +1,7 @@
 package app
 
-import app.models.{CashISASavingsAccount, Person}
+import app.models._
+import app.repositories.PetRepository
 import app.views.Prompt
 
 object GreeterApplication extends App {
@@ -33,5 +34,26 @@ object GreeterApplication extends App {
   val loyal = new Person("Loyal customer", 22, List(loyalAccountDeposited))
 
   Prompt.reply(loyal.speak())
-}
 
+  val dogs : List[Dog] = (for (p <- 1 to 10) yield Dog(s"Dog $p", p)).toList
+  val cats : List[Cat] = (for (p <- 1 to 10) yield Cat(s"Cat $p", p)).toList
+
+  Prompt.reply(s"Current pets in repo: ${PetRepository.all()}")
+
+  PetRepository.add(dogs:_*)
+  PetRepository.add(cats:_*)
+
+  Prompt.reply(s"Current pets in repo: ${PetRepository.all()}")
+
+  Prompt.reply(s"All dogs in the repository: ${PetRepository.dogs}")
+  Prompt.reply(s"All cats in the repository: ${PetRepository.cats}")
+  Prompt.reply(s"All other pets in the repository: ${PetRepository.other}")
+
+  val petToFind = Prompt.ask(s"Which pet do you want to find? ")
+
+  Prompt.reply(s"Pet found ${PetRepository.findByName(petToFind)}")
+
+  // modify a pet
+  val dog = Dog("Dog 11", 11)
+  PetRepository.update(dogs(4), dog)
+}
