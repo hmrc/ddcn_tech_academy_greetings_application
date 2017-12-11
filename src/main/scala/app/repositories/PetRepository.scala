@@ -8,7 +8,7 @@ object PetRepository {
 
   def all() : List[Pet] = _pets
 
-  def findByName(name : String) : Option[Pet] = _pets.find(p => p.name == name)
+  def findByName(name : String) : Option[Pet] = _pets.find(p => p.name.equalsIgnoreCase(name))
 
   def dogs : List[Dog] = {
     _pets.collect { case d : Dog => d }
@@ -30,6 +30,11 @@ object PetRepository {
 
   def removeByName(name : String) : List[Pet] = _pets.filterNot(p => p.name.equalsIgnoreCase(name))
 
-  def update(pet : Pet) : List[Pet] = _pets.updated(_pets.indexOf(pet), pet)
+  def update(original: Pet, modified: Pet) : List[Pet] = {
+    _pets = _pets.updated(indexOfPet(original), modified)
+    all()
+  }
+
+  private def indexOfPet(pet: Pet) = _pets.indexOf(pet)
 
 }
