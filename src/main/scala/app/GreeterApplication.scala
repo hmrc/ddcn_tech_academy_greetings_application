@@ -4,14 +4,25 @@ import app.models.{CashISASavingsAccount, Person}
 import app.views.Prompt
 
 object GreeterApplication extends App {
-  val name = Prompt.ask("What is your name? ")
-  val age = Prompt.ask("How old are you? ")
+
+  def arguments: (String, Int) = {
+    try {
+      val name = Prompt.ask("What is your name? ")
+      val age = Prompt.ask("How old are you? ")
+      (name, age.toInt)
+    } catch {
+      case _: NumberFormatException => println("Please enter a number for your age")
+        arguments
+    }
+  }
+
+  val (name, age) = arguments
 
   val cashisa = new CashISASavingsAccount("45676", 0.0, 1000.00)
   val deposited = cashisa.deposit(1000.00)
   val withdrawn = deposited.withdraw(200.00)
 
-  val person = new Person(name, age.toInt, List(withdrawn, deposited))
+  val person = new Person(name, age, List(withdrawn, deposited))
   Prompt.reply(person.speak())
   Prompt.reply(person.totalBalance)
   Prompt.reply(person.sumAndMultipleBy(_ * 2))
