@@ -3,17 +3,17 @@ package app
 import app.models._
 import app.repositories.PetRepository
 import app.views.Prompt
+import scala.util.{Failure, Success, Try}
 
 object GreeterApplication extends App {
 
   def arguments: (String, Int) = {
-    try {
-      val name = Prompt.ask("What is your name? ")
-      val age = Prompt.ask("How old are you? ")
-      (name, age.toInt)
-    } catch {
-      case _: NumberFormatException => println("Please enter a number for your age")
-        arguments
+    val name = Prompt.ask("What is your name? ")
+    val age = Prompt.ask("What is your age? ")
+
+     Try(age.toInt) match {
+      case Success(a) => (name, a)
+      case Failure(_) => arguments
     }
   }
 
