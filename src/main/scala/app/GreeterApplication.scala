@@ -1,6 +1,6 @@
 package app
 
-import app.models._
+import models._
 import app.repositories.PetRepository
 import app.views.Prompt
 import scala.util.{Failure, Success, Try}
