@@ -1,17 +1,10 @@
 package app.models
 
-import app.models.AccountTypes.AccountNumber
-
-object AccountTypes {
-  type AccountNumber = String
-  type Balance = Double
-}
-
-abstract class BankAccount(accountNumber : AccountTypes.AccountNumber,
-                           val balance: AccountTypes.Balance) {
+abstract class BankAccount(accountNumber : String,
+                           val balance: Double) {
 
   def withdraw(amount : Double) : BankAccount
   def deposit(amount : Double) : BankAccount
 
-  override def toString: AccountNumber = s"Account number: $accountNumber, balance : $balance"
+  override def toString: String = s"Account number: $accountNumber, balance : $balance"
 }
