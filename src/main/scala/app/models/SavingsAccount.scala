@@ -1,11 +1,10 @@
 package app.models
 
-import app.models.AccountTypes.{AccountNumber, Balance}
 
-final class SavingsAccount(accountNumber: AccountNumber,
-                           balance: Balance) extends BankAccount(accountNumber, balance) {
+final class SavingsAccount(accountNumber: String,
+                           balance: Double) extends BankAccount(accountNumber, balance) {
 
-  override def withdraw(amount: Balance): BankAccount = {
+  override def withdraw(amount: Double): BankAccount = {
     if ((balance - amount) < 0) {
       println(s"You have insufficient funds")
       this
@@ -15,7 +14,7 @@ final class SavingsAccount(accountNumber: AccountNumber,
     }
   }
 
-  override def deposit(amount: Balance): BankAccount = {
+  override def deposit(amount: Double): BankAccount = {
     new SavingsAccount(accountNumber, balance + amount)
   }
 
